@@ -4,11 +4,12 @@ from rest_framework import serializers
 
 class PostListSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
+    publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     class Meta:
         model = Post
         fields = [
             'url',
-            'user', 
+            'user',
             'title', 
             'publish_date'
             ]
@@ -17,10 +18,13 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
         }
 
 class PostDetailSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    modified_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    viewed_times = serializers.IntegerField(read_only=True)
     class Meta:
         model = Post
         fields = [
-            'id', 
             'user', 
             'title', 
             'content', 
