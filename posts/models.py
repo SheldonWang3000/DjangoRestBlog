@@ -6,7 +6,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
     publish_date = models.DateTimeField(auto_now_add=True, auto_now=False)
-    modified_date = models.DateTimeField(auto_now=True, auto_now_add=False)
+    modified_date = models.DateTimeField(auto_now=False, auto_now_add=False)
     viewed_times = models.IntegerField(default=0)
 
     def __str__(self):
