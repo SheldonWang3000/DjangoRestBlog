@@ -5,7 +5,9 @@ from rest_framework.permissions import (
     IsAuthenticated,
     IsAuthenticatedOrReadOnly,
 )
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView, 
     ListAPIView, 
@@ -16,6 +18,13 @@ from api.serializers import (
     PostListSerializer,
     PostCreateSerializer,
     )
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'list': reverse('api_v1:post-list', request=request, format=format),
+        'create': reverse('api_v1:post-create', request=request, format=format)
+    })
 
 class PostCreateViewSet(CreateAPIView):
     queryset = Post.objects.all()
