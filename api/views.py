@@ -1,5 +1,7 @@
 from posts.models import Post
 from django.utils import timezone
+
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import (
     AllowAny,
     IsAuthenticated,
@@ -37,6 +39,8 @@ class PostListViewSet(ListAPIView):
     queryset = Post.objects.all().order_by('-publish_date')
     serializer_class = PostListSerializer
     permission_classes = [AllowAny]
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'content']
 
 class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
