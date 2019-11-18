@@ -34,17 +34,9 @@ class PostCreateViewSet(CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
     def post(self, request, *args, **kwargs):
-        custom_data = request.data
         markdowner = Markdown()
-        custom_data['content'] =  markdowner.convert(custom_data['content'])
-
-        serializer = PostCreateSerializer(data=custom_data)
-        if serializer.is_valid():
-            serializer.save()
-            return super(PostCreateViewSet, self).create(request, args, kwargs)
-        else:
-            return Response(serializer.errors,
-                            status=status.HTTP_400_BAD_REQUEST)
+        request.data['content'] = markdowner.convert(request.data['content'])
+        return super(PostCreateViewSet, self).create(request, args, kwargs)
 
 class PostListViewSet(ListAPIView):
     queryset = Post.objects.all().order_by('-publish_date')
