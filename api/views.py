@@ -1,7 +1,5 @@
-from markdown2 import Markdown
 from posts.models import Post
 from django.utils import timezone
-from rest_framework import status
 
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import (
@@ -33,10 +31,7 @@ def api_root(request, format=None):
 class PostCreateViewSet(CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
-    def post(self, request, *args, **kwargs):
-        markdowner = Markdown()
-        request.data['content'] = markdowner.convert(request.data['content'])
-        return super(PostCreateViewSet, self).create(request, args, kwargs)
+    permission_classes = [AllowAny]
 
 class PostListViewSet(ListAPIView):
     queryset = Post.objects.all().order_by('-publish_date')
