@@ -2,11 +2,6 @@ from posts.models import Post
 from django.utils import timezone
 
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import (
-    AllowAny,
-    IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-)
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -31,19 +26,16 @@ def api_root(request, format=None):
 class PostCreateViewSet(CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
-    permission_classes = [AllowAny]
 
 class PostListViewSet(ListAPIView):
     queryset = Post.objects.all().order_by('-publish_date')
     serializer_class = PostListSerializer
-    permission_classes = [AllowAny]
     filter_backends = [SearchFilter]
     search_fields = ['title', 'content']
 
 class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
-    # permission_classes = [IsAuthenticatedOrReadOnly]
     def put(self, request, *args, **kwargs):
         obj = self.get_object()
         new_obj = request.data
