@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -54,6 +55,11 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+# SIMPLE_JWT = {
+    # 'ACCESS_TOKEN_LIFETIME': timedelta(seconds=1),
+    # 'REFRESH_TOKEN_LIFETIME': timedelta(seconds=10),
+# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
