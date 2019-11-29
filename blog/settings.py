@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 from datetime import timedelta
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -26,7 +27,7 @@ SECRET_KEY = 'plew34krtvjzjhv832%2o$i2=g$xc%$4k1odiiqikk5c0%8))s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-3-15-46-79.us-east-2.compute.amazonaws.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['www.sheldonweb.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -154,3 +155,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 CORS_ORIGIN_ALLOW_ALL = True
+
