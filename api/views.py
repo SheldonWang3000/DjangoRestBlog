@@ -15,6 +15,7 @@ from api.serializers import (
     PostListSerializer,
     PostCreateSerializer,
     )
+from .globalFunc import markdown2Abstract
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -26,9 +27,9 @@ def api_root(request, format=None):
 class PostCreateViewSet(CreateAPIView):
     queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
-
+        
 class PostListViewSet(ListAPIView):
-    queryset = Post.objects.all().order_by('-publish_date')
+    queryset = Post.objects.all().order_by('-modified_date')
     serializer_class = PostListSerializer
     filter_backends = [SearchFilter]
     search_fields = ['title', 'content']
@@ -41,6 +42,8 @@ class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
         new_obj = request.data
         if (obj.content is not new_obj['content']) or (obj.title is not new_obj['title']):
             obj.modified_date = timezone.now()
+            if (obj.content is not new_obj['content']):
+                obj.abstract = markdown2Abstract(new_obj['content'])
             obj.save()
         return super(PostDetailViewSet, self).update(request, args, kwargs)
 

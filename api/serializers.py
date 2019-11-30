@@ -1,9 +1,11 @@
 from posts.models import Post 
 from rest_framework import serializers
+from .globalFunc import markdown2Abstract
 
 class PostCreateSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
     publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    abstract = serializers.ReadOnlyField()
     class Meta:
         model = Post
         fields = [
@@ -11,11 +13,17 @@ class PostCreateSerializer(serializers.HyperlinkedModelSerializer):
             'user',
             'title',
             'content',
+            'abstract',
             'publish_date',
         ]
         extra_kwargs = {
             'url': {'view_name': 'api_v1:post-detail'},
         }
+
+    def create(self, validated_data):
+        return Post.objects.create(**validated_data, abstract=markdown2Abstract(validated_data['content']))
+
+    
 
 class PostListSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
@@ -26,6 +34,7 @@ class PostListSerializer(serializers.HyperlinkedModelSerializer):
             'id',
             'url',
             'user',
+            'abstract',
             'title', 
             'publish_date'
             ]
