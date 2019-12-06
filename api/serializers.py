@@ -4,12 +4,23 @@ from rest_framework import serializers
 from .globalFunc import markdown2Abstract
 from django.urls import reverse
 
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = [
+            'content',
+            'parent',
+            'avatar',
+            'username',
+        ]
+
 class CommentListSerializer(serializers.ModelSerializer):
     parent_comment = serializers.SerializerMethodField()
     class Meta:
         model = Comment
         fields = [
-            'blog',
+            'id',
             'content',
             'avatar',
             'username',

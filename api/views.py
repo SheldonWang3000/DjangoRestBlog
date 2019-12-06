@@ -8,6 +8,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView, 
+    DestroyAPIView,
     ListAPIView, 
     CreateAPIView,
     )
@@ -16,6 +17,7 @@ from api.serializers import (
     PostListSerializer,
     PostCreateSerializer,
     CommentListSerializer,
+    CommentSerializer,
     )
 from .globalFunc import markdown2Abstract
 
@@ -33,6 +35,9 @@ class CommentBlogListViewSet(ListAPIView):
         blog_id = self.kwargs['blog']
         queryset = Comment.objects.filter(blog_id=blog_id)
         return queryset.order_by('-pk')
+class CommentDeleteViewSet(DestroyAPIView):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
 class PostCreateViewSet(CreateAPIView):
     serializer_class = PostCreateSerializer
