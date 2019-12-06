@@ -30,13 +30,16 @@ def api_root(request, format=None):
 
 class CommentBlogListViewSet(ListAPIView):
     serializer_class = CommentListSerializer
-
     def get_queryset(self):
         blog_id = self.kwargs['blog']
         queryset = Comment.objects.filter(blog_id=blog_id)
         return queryset.order_by('-pk')
+
 class CommentDeleteViewSet(DestroyAPIView):
     queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+
+class CommentCreateViewSet(CreateAPIView):
     serializer_class = CommentSerializer
 
 class PostCreateViewSet(CreateAPIView):

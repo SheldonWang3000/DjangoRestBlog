@@ -9,11 +9,19 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
+            'blog',
             'content',
             'parent',
             'avatar',
             'username',
         ]
+    def validate(self, data):
+        """
+        Check that the parent belongs to the same blog 
+        """
+        if data['parent'] is not None and data['parent'].blog.id != data['blog'].id:
+            raise serializers.ValidationError("parent comment does not belong to the same blog")
+        return data
 
 class CommentListSerializer(serializers.ModelSerializer):
     parent_comment = serializers.SerializerMethodField()
