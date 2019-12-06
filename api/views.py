@@ -1,4 +1,5 @@
 from posts.models import Post
+from comments.models import Comment
 from django.utils import timezone
 
 from rest_framework.filters import SearchFilter
@@ -14,6 +15,7 @@ from api.serializers import (
     PostDetailSerializer, 
     PostListSerializer,
     PostCreateSerializer,
+    CommentListSerializer,
     )
 from .globalFunc import markdown2Abstract
 
@@ -24,8 +26,15 @@ def api_root(request, format=None):
         'create': reverse('api_v1:post-create', request=request, format=format)
     })
 
+class CommentBlogListViewSet(ListAPIView):
+    serializer_class = CommentListSerializer
+
+    def get_queryset(self):
+        blog_id = self.kwargs['blog']
+        queryset = Comment.objects.filter(blog_id=blog_id)
+        return queryset.order_by('-pk')
+
 class PostCreateViewSet(CreateAPIView):
-    queryset = Post.objects.all()
     serializer_class = PostCreateSerializer
         
 class PostListViewSet(ListAPIView):
@@ -37,6 +46,7 @@ class PostListViewSet(ListAPIView):
 class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostDetailSerializer
+
     def put(self, request, *args, **kwargs):
         obj = self.get_object()
         new_obj = request.data
@@ -52,5 +62,4 @@ class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         instance.viewed_times += 1
         instance.save()
-        return Response(PostDetailSerializer(instance).data)
-
+        return Response(PostDetailSerializer(instance, context={'request':request}).data)

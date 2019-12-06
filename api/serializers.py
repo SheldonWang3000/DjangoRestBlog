@@ -1,6 +1,26 @@
 from posts.models import Post 
+from comments.models import Comment
 from rest_framework import serializers
 from .globalFunc import markdown2Abstract
+from django.urls import reverse
+
+class CommentListSerializer(serializers.ModelSerializer):
+    parent_comment = serializers.SerializerMethodField()
+    class Meta:
+        model = Comment
+        fields = [
+            'blog',
+            'content',
+            'avatar',
+            'username',
+            'parent_comment',
+        ]
+    def get_parent_comment(self, obj):
+        if obj.parent is not None:
+            return CommentListSerializer(Comment.objects.get(pk=obj.parent_id)).data
+        else:
+            return None
+
 
 class PostCreateSerializer(serializers.HyperlinkedModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
@@ -47,13 +67,23 @@ class PostDetailSerializer(serializers.ModelSerializer):
     publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     modified_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     viewed_times = serializers.IntegerField(read_only=True)
+    # comments = serializers.HyperlinkedIdentityField(view_name='api_v1:comment-blog-list', lookup_field='id', lookup_url_kwarg='blog')
+    comments = serializers.SerializerMethodField()
     class Meta:
         model = Post
         fields = [
             'user', 
             'title', 
             'content', 
+            'comments',
             'publish_date', 
             'modified_date', 
-            'viewed_times'
+            'viewed_times',
             ]
+
+    def get_comments(self, obj):
+        if len(Comment.objects.filter(blog=obj.id)) == 0:
+            return None
+        else:
+            return (self.context['request'].build_absolute_uri(reverse('api_v1:comment-blog-list', kwargs={'blog': obj.id})))
+        return None
