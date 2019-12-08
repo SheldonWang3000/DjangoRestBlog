@@ -7,7 +7,7 @@ class Comment(models.Model):
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     content = models.TextField(default="")
     username = models.TextField(default="User")
-    avatar = models.URLField(default="https://www.sheldonweb.com/default_avatar.png")
+    avatar = models.URLField(default="https://www.sheldonweb.com/media/default_avatar.png")
 
 
     def __str__(self):
