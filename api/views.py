@@ -2,6 +2,7 @@ from posts.models import Post
 from comments.models import Comment
 from django.utils import timezone
 
+from rest_framework.permissions import AllowAny
 from rest_framework.filters import SearchFilter
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -41,6 +42,7 @@ class CommentDeleteViewSet(DestroyAPIView):
 
 class CommentCreateViewSet(CreateAPIView):
     serializer_class = CommentSerializer
+    permission_classes = [AllowAny]
 
 class PostCreateViewSet(CreateAPIView):
     serializer_class = PostCreateSerializer
