@@ -7,13 +7,13 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.generics import (
-    RetrieveUpdateDestroyAPIView, 
+    RetrieveUpdateDestroyAPIView,
     DestroyAPIView,
-    ListAPIView, 
+    ListAPIView,
     CreateAPIView,
     )
 from api.serializers import (
-    PostDetailSerializer, 
+    PostDetailSerializer,
     PostListSerializer,
     PostCreateSerializer,
     CommentListSerializer,
@@ -33,7 +33,7 @@ class CommentBlogListViewSet(ListAPIView):
     def get_queryset(self):
         blog_id = self.kwargs['blog']
         queryset = Comment.objects.filter(blog_id=blog_id)
-        return queryset.order_by('-pk')
+        return queryset.order_by('-publish_date')
 
 class CommentDeleteViewSet(DestroyAPIView):
     queryset = Comment.objects.all()
@@ -44,7 +44,7 @@ class CommentCreateViewSet(CreateAPIView):
 
 class PostCreateViewSet(CreateAPIView):
     serializer_class = PostCreateSerializer
-        
+
 class PostListViewSet(ListAPIView):
     queryset = Post.objects.all().order_by('-modified_date')
     serializer_class = PostListSerializer

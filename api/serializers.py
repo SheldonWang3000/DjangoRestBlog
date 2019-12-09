@@ -25,6 +25,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class CommentListSerializer(serializers.ModelSerializer):
     parent_comment = serializers.SerializerMethodField()
+    publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     class Meta:
         model = Comment
         fields = [
@@ -32,6 +33,7 @@ class CommentListSerializer(serializers.ModelSerializer):
             'content',
             'avatar',
             'username',
+            'publish_date',
             'parent_comment',
         ]
     def get_parent_comment(self, obj):
