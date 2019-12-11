@@ -33,7 +33,7 @@ class CommentBlogListViewSet(ListAPIView):
     serializer_class = CommentListSerializer
     def get_queryset(self):
         blog_id = self.kwargs['blog']
-        queryset = Comment.objects.filter(blog_id=blog_id)
+        queryset = Comment.objects.filter(blog_id=blog_id, parent=None)
         return queryset.order_by('-publish_date')
 
 class CommentDeleteViewSet(DestroyAPIView):

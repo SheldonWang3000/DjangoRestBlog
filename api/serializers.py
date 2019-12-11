@@ -24,7 +24,7 @@ class CommentSerializer(serializers.ModelSerializer):
         return data
 
 class CommentListSerializer(serializers.ModelSerializer):
-    parent_comment = serializers.SerializerMethodField()
+    children_comment = serializers.SerializerMethodField()
     publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     class Meta:
         model = Comment
@@ -34,13 +34,13 @@ class CommentListSerializer(serializers.ModelSerializer):
             'avatar',
             'username',
             'publish_date',
-            'parent_comment',
+            'children_comment',
         ]
-    def get_parent_comment(self, obj):
-        if obj.parent is not None:
-            return CommentListSerializer(Comment.objects.get(pk=obj.parent_id)).data
-        else:
-            return None
+    def get_children_comment(self, obj):
+        queryset = Comment.objects.filter(parent=obj.pk)
+        if len(queryset) != 0:
+            return [CommentListSerializer(item).data for item in queryset]
+        return None
 
 
 class PostCreateSerializer(serializers.HyperlinkedModelSerializer):
