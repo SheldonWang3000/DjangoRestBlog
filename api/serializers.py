@@ -37,7 +37,7 @@ class CommentListSerializer(serializers.ModelSerializer):
             'children_comment',
         ]
     def get_children_comment(self, obj):
-        queryset = Comment.objects.filter(parent=obj.pk)
+        queryset = Comment.objects.filter(parent=obj.pk).order_by('-publish_date')
         if len(queryset) != 0:
             return [CommentListSerializer(item).data for item in queryset]
         return None
