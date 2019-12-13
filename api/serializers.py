@@ -118,6 +118,7 @@ class PostDashboardListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = [
+            'id',
             'title',
             'viewed_times',
             'comments_num',

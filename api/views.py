@@ -3,7 +3,10 @@ from comments.models import Comment
 from django.utils import timezone
 
 from rest_framework.permissions import AllowAny
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import (
+    SearchFilter, 
+    OrderingFilter
+    )
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -48,8 +51,9 @@ class CommentCreateViewSet(CreateAPIView):
 class PostDashboardListViewSet(ListAPIView):
     queryset = Post.objects.all().order_by(*['-sticky', '-modified_date'])
     serializer_class = PostDashboardListSerializer
-    filter_backends = [SearchFilter]
+    filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'content']
+    ordering_fields = ['title', 'viewed_times', 'publish_date', 'modified_date', 'sticky', 'comments_num']
 
 class PostCreateViewSet(CreateAPIView):
     serializer_class = PostCreateSerializer
