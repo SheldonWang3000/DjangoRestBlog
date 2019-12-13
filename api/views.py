@@ -17,6 +17,7 @@ from api.serializers import (
     PostDetailSerializer,
     PostListSerializer,
     PostCreateSerializer,
+    PostDashboardListSerializer,
     CommentListSerializer,
     CommentSerializer,
     )
@@ -43,6 +44,12 @@ class CommentDeleteViewSet(DestroyAPIView):
 class CommentCreateViewSet(CreateAPIView):
     serializer_class = CommentSerializer
     permission_classes = [AllowAny]
+
+class PostDashboardListViewSet(ListAPIView):
+    queryset = Post.objects.all().order_by(*['-sticky', '-modified_date'])
+    serializer_class = PostDashboardListSerializer
+    filter_backends = [SearchFilter]
+    search_fields = ['title', 'content']
 
 class PostCreateViewSet(CreateAPIView):
     serializer_class = PostCreateSerializer
