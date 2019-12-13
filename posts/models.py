@@ -9,6 +9,20 @@ class Post(models.Model):
     modified_date = models.DateTimeField(auto_now_add=True, auto_now=False)
     viewed_times = models.IntegerField(default=0)
     abstract = models.TextField(default="Abstract")
+    sticky = models.BooleanField(null=True, unique=True)
 
     def __str__(self):
         return self.title
+
+    def save(self, *args, **kwargs):
+        if self.sticky == True:
+            try:
+                queryObject = Post.objects.get(sticky=True)
+                if queryObject.pk != self.pk:
+                    queryObject.sticky = None
+                    queryObject.save()
+                super(Post, self).save(*args, **kwargs)
+            except Post.DoesNotExist:
+                super(Post, self).save(*args, **kwargs)
+        else:
+            super(Post, self).save(*args, **kwargs)

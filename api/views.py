@@ -48,7 +48,7 @@ class PostCreateViewSet(CreateAPIView):
     serializer_class = PostCreateSerializer
 
 class PostListViewSet(ListAPIView):
-    queryset = Post.objects.all().order_by('-modified_date')
+    queryset = Post.objects.all().order_by(*['-sticky', '-modified_date'])
     serializer_class = PostListSerializer
     filter_backends = [SearchFilter]
     search_fields = ['title', 'content']
