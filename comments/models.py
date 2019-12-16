@@ -1,9 +1,7 @@
 from django.db import models
 
-from posts.models import Post
-
 class Comment(models.Model):
-    blog = models.ForeignKey(Post, on_delete=models.CASCADE) 
+    blog = models.ForeignKey('posts.Post', on_delete=models.CASCADE) 
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE)
     content = models.TextField(default="")
     username = models.TextField(default="User")

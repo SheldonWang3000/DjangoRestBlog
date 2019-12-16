@@ -111,10 +111,10 @@ class PostDetailSerializer(serializers.ModelSerializer):
 
 
 class PostDashboardListSerializer(serializers.ModelSerializer):
-    comments_num = serializers.SerializerMethodField()
     publish_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     modified_date = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     viewed_times = serializers.IntegerField(read_only=True)
+    comments_num = serializers.IntegerField(read_only=True)
     class Meta:
         model = Post
         fields = [
@@ -126,6 +126,3 @@ class PostDashboardListSerializer(serializers.ModelSerializer):
             'modified_date',
             'sticky',
         ]
-
-    def get_comments_num(self, obj):
-        return len(Comment.objects.filter(blog=obj.pk))

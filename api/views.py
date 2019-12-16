@@ -1,6 +1,7 @@
 from posts.models import Post
 from comments.models import Comment
 from django.utils import timezone
+from django.db.models import Count
 
 from rest_framework.permissions import AllowAny
 from rest_framework.filters import (
@@ -49,7 +50,7 @@ class CommentCreateViewSet(CreateAPIView):
     permission_classes = [AllowAny]
 
 class PostDashboardListViewSet(ListAPIView):
-    queryset = Post.objects.all().order_by(*['-sticky', '-modified_date'])
+    queryset = Post.objects.all().annotate(comments_num=Count('comment')).order_by(*['-sticky', '-modified_date'])
     serializer_class = PostDashboardListSerializer
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title', 'content']

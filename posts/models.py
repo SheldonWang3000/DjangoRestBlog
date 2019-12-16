@@ -21,8 +21,6 @@ class Post(models.Model):
                 if queryObject.pk != self.pk:
                     queryObject.sticky = None
                     queryObject.save()
-                super(Post, self).save(*args, **kwargs)
             except Post.DoesNotExist:
-                super(Post, self).save(*args, **kwargs)
-        else:
-            super(Post, self).save(*args, **kwargs)
+                print('no sticky post')
+        super(Post, self).save(*args, **kwargs)
