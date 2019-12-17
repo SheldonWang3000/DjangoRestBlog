@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'posts',
     'comments',
+    'deleteList',
 ]
 
 REST_FRAMEWORK = {

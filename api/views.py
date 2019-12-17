@@ -1,9 +1,12 @@
 from posts.models import Post
 from comments.models import Comment
+from deleteList.models import (DeleteTransaction, DeleteArray)
 from django.utils import timezone
 from django.db.models import Count
+from django.shortcuts import get_object_or_404
 
 from rest_framework.permissions import AllowAny
+from rest_framework import status
 from rest_framework.filters import (
     SearchFilter, 
     OrderingFilter
@@ -24,6 +27,7 @@ from api.serializers import (
     PostDashboardListSerializer,
     CommentListSerializer,
     CommentSerializer,
+    DeleteTransactionSerializer,
     )
 from .globalFunc import markdown2Abstract
 
@@ -85,3 +89,20 @@ class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
         instance.viewed_times += 1
         instance.save()
         return Response(PostDetailSerializer(instance, context={'request':request}).data)
+
+class DeleteTransactionCreateViewSet(CreateAPIView):
+    serializer_class = DeleteTransactionSerializer 
+
+class DeleteTransactionExecuteViewSet(ListAPIView):
+    def get_queryset(self):
+        transaction_id = self.kwargs['transaction']
+        return DeleteArray.objects.filter(transaction_id=transaction_id)
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        for item in queryset:
+            item.blog.delete()
+        
+        get_object_or_404(DeleteTransaction, pk=self.kwargs['transaction']).delete()
+        return Response(status=status.HTTP_202_ACCEPTED)
+

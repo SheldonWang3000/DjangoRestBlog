@@ -10,11 +10,15 @@ from .views import (
     CommentBlogListViewSet,
     CommentDeleteViewSet,
     CommentCreateViewSet,
+    DeleteTransactionCreateViewSet,
+    DeleteTransactionExecuteViewSet,
 )
 
 app_name = 'api'
 urlpatterns = [
     path('', api_root, name='post-root'),
+    path('deleteList/', DeleteTransactionCreateViewSet.as_view(), name='delete-create-list'),
+    path('deleteList/execute/<int:transaction>/', DeleteTransactionExecuteViewSet.as_view(), name='delete-execute'),
     path('list/', PostListViewSet.as_view(), name='post-list'),
     path('dashboard/list/', PostDashboardListViewSet.as_view(), name='post-dashboard-list'),
     path('posts/<int:pk>/', PostDetailViewSet.as_view(), name='post-detail'),
