@@ -12,6 +12,7 @@ from .views import (
     CommentCreateViewSet,
     DeleteTransactionCreateViewSet,
     DeleteTransactionExecuteViewSet,
+    StickyPostViewSet,
 )
 
 app_name = 'api'
@@ -22,6 +23,7 @@ urlpatterns = [
     path('list/', PostListViewSet.as_view(), name='post-list'),
     path('dashboard/list/', PostDashboardListViewSet.as_view(), name='post-dashboard-list'),
     path('posts/<int:pk>/', PostDetailViewSet.as_view(), name='post-detail'),
+    path('sticky/<int:pk>/', StickyPostViewSet.as_view(), name='sticky-post'),
     path('posts/', PostCreateViewSet.as_view(), name='post-create'),
     path('comments/create/', CommentCreateViewSet.as_view(), name='comment-create'),
     path('comments/blog/<int:blog>/', CommentBlogListViewSet.as_view(), name='comment-blog-list'),

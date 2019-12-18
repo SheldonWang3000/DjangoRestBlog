@@ -16,9 +16,11 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.generics import (
     RetrieveUpdateDestroyAPIView,
+    UpdateAPIView,
     DestroyAPIView,
     ListAPIView,
     CreateAPIView,
+    GenericAPIView,
     )
 from api.serializers import (
     PostDetailSerializer,
@@ -93,7 +95,7 @@ class PostDetailViewSet(RetrieveUpdateDestroyAPIView):
 class DeleteTransactionCreateViewSet(CreateAPIView):
     serializer_class = DeleteTransactionSerializer 
 
-class DeleteTransactionExecuteViewSet(ListAPIView):
+class DeleteTransactionExecuteViewSet(GenericAPIView):
     def get_queryset(self):
         transaction_id = self.kwargs['transaction']
         return DeleteArray.objects.filter(transaction_id=transaction_id)
@@ -106,3 +108,9 @@ class DeleteTransactionExecuteViewSet(ListAPIView):
         get_object_or_404(DeleteTransaction, pk=self.kwargs['transaction']).delete()
         return Response(status=status.HTTP_202_ACCEPTED)
 
+class StickyPostViewSet(UpdateAPIView):
+    def update(self, request, *args, **kwargs):
+        obj = get_object_or_404(Post, pk=kwargs['pk'])
+        obj.sticky = request.data['sticky']
+        obj.save()
+        return Response(status=status.HTTP_200_OK)
